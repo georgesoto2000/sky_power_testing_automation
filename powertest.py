@@ -190,9 +190,8 @@ def send_command(string): #uses sky-remote Node.js module to transmit bytes to p
             time.sleep(1) 
 def clear_file(name): #clears power logging files before a new test starts
     for platform in smartplugs:
-        name=platform+"_"+name
-        print(name)
-        f=open(name,"w")
+        name2=platform+"_"+name
+        f=open(name2,"w")
         f.close
 def logger(end_time,test): #logs power for all platforms at the same time creating a different csv file for each
     error = [0 for i in range(len(STBs))] #setup error array
