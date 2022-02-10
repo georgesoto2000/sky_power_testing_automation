@@ -275,7 +275,6 @@ D1_SP=sky.plug('D1','192.168.1.118')
 ethernet=sky.network_switch('192.168.1.123')#ethernet smart plug IP address
 
 smartplug = [TITAN_SP]
-TITAN_ONLY=[TITAN]
 
 STBs = [XWING, V2,D1, TITAN]
 smartplugs = [XWING_SP, V2_SP, D1_SP, TITAN_SP]
@@ -296,8 +295,8 @@ RTNSS_ECO_OVERNIGHT_REBOOT(STBs, smartplugs)
 RTNSS_ECO_OVERNIGHT(STBs, smartplugs)
 RTNSS_DAILY_3_NIGHT(STBs, smartplugs)
 RTNSS_DAILY_POWER_CYCLE_3_NIGHT(STBs, smartplugs)
-TITAN_ONLY_NONE(TITAN_ONLY, smartplug)
-TITAN_ONLY_ACTIVE(TITAN_ONLY, smartplug)
+TITAN_ONLY_NONE(TITAN, smartplug)
+TITAN_ONLY_ACTIVE(TITAN, smartplug)
 DAILY_REBOOT_ECO_ACTIVE(STBs, smartplugs)
 DAILY_REBOOT_NONE(STBs, smartplugs)
 DAILY_REBOOT_ECO_NONE(STBs, smartplugs)
