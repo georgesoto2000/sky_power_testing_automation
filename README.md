@@ -6,3 +6,5 @@ The script is written to log power on four different types of set top boxes (pla
 The physical conditions that can be changed are: connecting/disconnecting the satellite feeds and connecting/disconnecting ethernet internet connection. The satellite feeds are controlled using a Raspberry Pi's GPIO connected to RF switches (HMC849a). The ethernet connection to the STBs comes from a five port network switch. This switch is powered by a smart plug. By turning the smart plug off, the wired internet connection to the STB is broken.
 
 Power tests are an amalgamation of these conditions. Each test implements a selection of the stated functionallity in a different sequence, in order to ensure that all laws concerning e-products' power consumption are followed. A block diagram of the rack is included in the repository.
+
+The sky.py file contains the classes and the power_tests.py file contain the tests
