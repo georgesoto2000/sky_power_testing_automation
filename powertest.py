@@ -64,8 +64,8 @@ def send_email(error,name,smartplugs): #sends four emails with test results from
         if(error[n]==1):
                 body = "test failed" #message returned if the test has failed to be conducted
         sender_email = "automatedtests.sky@gmail.com"
-        receiver_email = "george.soto@sky.uk"
-        password = "Tester1234"
+        receiver_email = RECIEVER_EMAIL
+        password = PASSWORD
         message = MIMEMultipart()
         message["From"] = sender_email
         message["To"] = receiver_email
