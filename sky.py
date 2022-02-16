@@ -10,14 +10,14 @@ class STB: #STB class
     DTH_VNC_port=49160
     SOIP_VNC_port=5800
     def __init__(self, platform, IP, vnc_port,sat1, sat2): #initilise STB object with IP address of box and VNC port
-        self.IP=IP
-        self.vnc_port=vnc_port
-        self.sat1=sat1
+        self.IP=IP #IPaddress of STB
+        self.vnc_port=vnc_port #port to transmit bytes over
+        self.sat1=sat1 #GPIO pin connected to satelite feed switch
         self.sat2=sat2
-        self.platform=platform
+        self.platform=platform #name of the STB
 
     def press(self,string): #emulate remote with string of buton presses
-        with open('sky-remote.js','r') as file: #rewrite VNC port on sky-remote module
+        with open('sky-remote.js','r') as file: #rewrite VNC port on sky-remote module to work on multiple platforms
             lines=file.readlines()
             lines[68]="SkyRemote.SKY_Q = "+str(self.vnc_port)+";"
         with open("sky-remote.js",'w') as file:
@@ -43,7 +43,7 @@ class STB: #STB class
         requests.post(url)
         time.sleep(30)
         self.wake()
-    def wake(self):
+    def wake(self): #pings box to check if its awake, if not, it waits a minute and retries, after 10 tries it breaks
         wake=0
         while True:
             self.press("home home home home")
@@ -85,7 +85,7 @@ class STB: #STB class
         print("setting active mode ",self.platform)
         self.press("home home down down down down down down down down down down down select down down down down select down down down down select right down down up select left select home backup")
 
-    def sat_feeds(self,x): #Turns satellite feed 1 on/off
+    def sat_feeds(self,x): #Turns satellite feeds on/off with RF switch (through GPIO)
         GPIO.setmode(GPIO.BCM)         
         GPIO.setup(self.sat1, GPIO.OUT)  #set GPIO2 as an o/p          
         GPIO.setup(self.sat2, GPIO.OUT)      
@@ -93,79 +93,7 @@ class STB: #STB class
         GPIO.output(self.sat2, x)
         print("sat feeds ",x,self.platform)
 
-    def negative_test(self):
-        tn=Telnet(self.IP)
-        user="darwin"
-        password="themoose"
-        tn.read_until(b"bskyb-xwing412 login:")
-        tn.write(user.encode("ascii")+b"\n")
-        tn.read_until(b"Password:")
-        tn.write(password.encode("ascii")+b"\n")
-        tn.write("cd /mnt/nds".encode("ascii")+b"\n")
-        tn.write("ls".encode("ascii")+b"\n")
-        files=str(tn.read_until(b"dev_19"))
-        dev=["dev_11","dev_12","dev_13","dev_14","dev_15", "dev_16","dev_17","dev_18","dev_19"] #list of files in directory
-        for devs in dev:
-            command="cd "+devs
-            tn.write(command.encode("ascii")+b"\n")
-            tn.write("ls".encode("ascii")+b"\n")
-            tn.read_until(b"-sh-3.2#")
-            tn.write(("cd part_0").encode("ascii")+b"\n")
-            tn.read_until(b"-sh-3.2#")
-            tn.write("ls LOG".encode("ascii")+b"\n")
-            file=tn.read_until(b"directory",timeout=1)
-            file=file.split()
-            flag=0
-            for i in file:
-                if i==b'directory':
-                    flag=1
-            if flag==0:
-                tn.write("tail -F LOG | grep -i asid_fizzy_watermark.c".encode("ascii")+b"\n")
-                file=tn.read_until(b"Avg")
-                tn.close()
-                file=file.split()
-                for i in range(0,len(file)):
-                    if file[i]==b"Index":
-                        if file[i+3]==b'(0),':
-                            return True
-                        else:
-                            return False
-                break
-            tn.write("cd ..".encode("ascii")+b"\n")
-            tn.write("cd ..".encode("ascii")+b"\n")
-        print("failed to find LOG directory")
-        tn.close
-        return False
-
-    def play_netflix(self): 
-        url1="http://"+self.IP+":9005/as/apps"
-        reply=requests.get(url1).json()
-        for i in (reply["apps"]):
-            if i["appId"]=="Netflix":
-                url="http://"+self.IP+":9005/as/apps/action/launch"
-                file=requests.post(url, data=None, params={"appId":"Netflix"})
-                time.sleep(20)
-                self.press("select")
-                return True
-        return False
-    def play_youtube(self):
-        url1="http://"+self.IP+":9005/as/apps"
-        reply=requests.get(url1).json()
-        for i in (reply["apps"]):
-            if i["appId"]=="YouTube":
-                url="http://"+self.IP+":9005/as/apps/action/launch"
-                file=requests.post(url, data=None, params={"appId":"YouTube"})
-                time.sleep(20)
-                self.press("select")
-                return True
-        return False
-    def play_sky_boxsets(self):
-        self.press("home")
-    def play_sky_store(self):
-        self.press("home")
-    def play_sky_cinema(self):
-        self.press("home")
-class network_switch(SmartPlug): #change to be polymorphic?
+class network_switch(SmartPlug): #Smartplug that connects/disconnects ethernet connection
     def __init__(self,IP):
         super().__init__(IP)
     def turnoff(self):
@@ -188,11 +116,11 @@ class network_switch(SmartPlug): #change to be polymorphic?
             error=1
         return error
 
-class powerbrick(): 
+class powerbrick(): #monitors power
     def __init__(self,platform, IP):
         self.platform=platform
         self.IP=IP
-    def get_power(self):
+    def get_power(self): #telnets into power brick and returns power
         try:
             tn=Telnet(self.ip)
             command="GET ALL\r\n"
