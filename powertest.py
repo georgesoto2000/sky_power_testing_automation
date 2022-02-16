@@ -25,7 +25,7 @@ def logger(end_time,test,powerbricks): #logs power for all platforms at the same
             f.close()
 
 
-def send_email(name,powerbricks): #sends four emails with test results from each platform
+def send_email(name,powerbricks): #sends emails for each platform with test results 
     n=0
     print("sending email...")
     for brick in powerbricks:
@@ -63,33 +63,6 @@ def send_email(name,powerbricks): #sends four emails with test results from each
 
 
 #TESTS
-def ASID(STBs):
-    for STB in STBs:
-        if STB.play_netflix():
-            if STB.negative_test():
-                print("Netflix ASID: pass")
-            else:
-                print("Netflix ASID: fail")
-        if STB.play_youtube():
-            if STB.negative_test():
-                print("Youtube ASID: pass")
-            else:
-                print("Youtube ASID: fail")
-        STB.play_sky_boxsets()
-        if STB.negative_test():
-                print("Sky Boxsets ASID: pass")
-        else:
-                print("Sky Boxsets ASID: fail")
-        STB.play_sky_store()
-        if STB.negative_test():
-                print("Sky Store ASID: pass")
-        else:
-                print("Sky Store ASID: fail")
-        STB.play_sky_cinema()
-        if STB.negative_test():
-                print("Sky Cinema ASID: pass")
-        else:
-                print("Sky Cinema ASID: fail")
         
 def DAILY_REBOOT_ACTIVE(STBs, powerbricks):
     for STB in STBs:
@@ -246,7 +219,7 @@ def OVERNIGHT_ECO(STBs, powerbricks):
     send_email(name,powerbricks)
 #main
        
-#os.system("npm install sky-remote") 
+
 
 DTH=49160
 SOIP=5800
@@ -266,8 +239,6 @@ D1_brick=sky.powerbrick('D1','192.168.1.118')
 
 ethernet=sky.network_switch('192.168.1.123')#ethernet smart plug IP address
 
-titan_brick = [TITAN_brick]
-
 
 STBs = [XWING, V2, D1, TITAN]
 powerbricks = [XWING_brick, V2_brick, D1_brick, TITAN_brick]
@@ -279,7 +250,6 @@ for STB in STBs: #wakeup boxes
 
 #list of tests
 
-ASID(STBs)
 OVERNIGHT_ECO(STBs, powerbricks)
 OVERNIGHT_ACTIVE(STBs, powerbricks)
 OVERNIGHT_NONE(STBs, powerbricks)
@@ -289,8 +259,8 @@ RTNSS_ECO_OVERNIGHT_REBOOT(STBs, powerbricks)
 RTNSS_ECO_OVERNIGHT(STBs, powerbricks)
 RTNSS_DAILY_3_NIGHT(STBs, powerbricks)
 RTNSS_DAILY_POWER_CYCLE_3_NIGHT(STBs, powerbricks)
-TITAN_ONLY_NONE(TITAN, titan_brick)
-TITAN_ONLY_ACTIVE(TITAN, titan_brick)
+TITAN_ONLY_NONE(TITAN, [TITAN_brick])
+TITAN_ONLY_ACTIVE(TITAN, [TITAN_brick])
 DAILY_REBOOT_ECO_ACTIVE(STBs, powerbricks)
 DAILY_REBOOT_NONE(STBs, powerbricks)
 DAILY_REBOOT_ECO_NONE(STBs,  powerbricks)
