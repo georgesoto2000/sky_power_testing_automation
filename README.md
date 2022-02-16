@@ -7,4 +7,6 @@ The physical conditions that can be changed are: connecting/disconnecting the sa
 
 Power tests are an amalgamation of these conditions. Each test implements a selection of the stated functionallity in a different sequence, in order to ensure that all laws concerning e-products' power consumption are followed. A block diagram of the rack is included in the repository.
 
+The program measures power using "power bricks". Power is retrieved via the "GET ALL" telnet command.
+
 The sky.py file contains the classes and the power_tests.py file contain the tests
