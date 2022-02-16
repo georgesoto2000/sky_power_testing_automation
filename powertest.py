@@ -233,7 +233,7 @@ V2=sky.STB('V2','192.168.1.104', DTH, 8, 9)
 #define powerbricks
 TITAN_brick=sky.powerbrick('TITAN', '192.168.1.117')
 V2_brick=sky.powerbrick('V2','192.168.109')
-XWING_brick=sky.powerbrick('XWING','192.168.1.125')#not correct
+XWING_brick=sky.powerbrick('XWING','192.168.1.125')
 D1_brick=sky.powerbrick('D1','192.168.1.118')
 
 
