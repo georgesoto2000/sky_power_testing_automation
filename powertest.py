@@ -104,7 +104,7 @@ def DAILY_REBOOT_ECO_ACTIVE(STBs, powerbricks):
     logger(end_of_test_time(2),name,powerbricks)
     send_email(name,powerbricks)
 
-def TITAN_ONLY_ACTIVE(TITAN, smartplug, ethernet):
+def TITAN_ONLY_ACTIVE(TITAN, powerbrick, ethernet):
     TITAN.set_active()
     TITAN.toggle_tuners()
     TITAN.press("power")
@@ -112,7 +112,7 @@ def TITAN_ONLY_ACTIVE(TITAN, smartplug, ethernet):
     ethernet.turnoff()
     TITAN.sat_feeds(0)
     name="TITAN_ONLY_ACTIVE.csv"
-    logger(end_of_test_time(2),name,smartplug)
+    logger(end_of_test_time(2),name,powerbrick)
     send_email(name,smartplug)
     TITAN.sat_feeds(1)
     ethernet.turnon()
@@ -128,7 +128,7 @@ def TITAN_ONLY_NONE(TITAN, powerbrick,ethernet):
     TITAN.sat_feeds(0)
     name="TITAN_ONLY_NONE.csv"
     logger(end_of_test_time(2),name,powerbrick)
-    send_email(name,powerbricks)
+    send_email(name,powerbrick)
     TITAN.sat_feeds(1)
     ethernet.turnon()
     TITAN.toggle_tuners()
